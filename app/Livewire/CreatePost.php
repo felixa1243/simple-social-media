@@ -5,23 +5,35 @@ namespace App\Livewire;
 use App\Models\Post;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Livewire\Features\SupportFileUploads\WithFileUploads;
 
 class CreatePost extends Component
 {
+    use WithFileUploads;
+
     public $content = '';
-    public function save()
+    public $image;
+    public $maxLength = 280;
+
+    protected $rules = [
+        'content' => 'required|max:280',
+        'image' => 'nullable|image|max:1024', // max 1MB
+    ];
+
+    public function updatedContent()
     {
-        Post::create(
-            [
-                "post_content" => $this->content,
-                "user_id" => Auth::user()->id
-            ]
-        );
-        session()->flash('status', 'Post Successfully created');
-        return $this->redirect("/posts/create");
+        $this->validateOnly('content');
     }
-    public function render()
+
+    public function submit()
     {
-        return view('livewire.create-post');
+        $this->validate();
+        Post::create([
+            'user_id' => Auth::user()->id,
+            'post_content' => $this->content
+        ]);
+        $this->reset(['content', 'image']);
+        session()->flash('message', 'Post created successfully!');
+        $this->redirect("/dashboard");
     }
 }
