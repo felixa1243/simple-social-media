@@ -17,7 +17,7 @@ class CreatePost extends Component
 
     protected $rules = [
         'content' => 'required|max:280',
-        'image' => 'nullable|image|max:1024', // max 1MB
+        'image' => 'nullable|image|max:1024',
     ];
 
     public function updatedContent()
@@ -28,11 +28,16 @@ class CreatePost extends Component
     public function submit()
     {
         $this->validate();
-        Post::create([
+
+        $result = Post::create([
             'user_id' => Auth::user()->id,
             'post_content' => $this->content
         ]);
-        $this->reset(['content', 'image']);
+        $username = Auth::user()->email;
+        $path = $this->image->store(path: "$username/post/$result->id/");
+        if ($this->image) {
+            $result->update(["media_url" => $path]);
+        }
         session()->flash('message', 'Post created successfully!');
         $this->redirect("/dashboard");
     }

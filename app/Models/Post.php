@@ -10,6 +10,7 @@ class Post extends Model
     use HasUuids;
     protected $fillable = [
         "post_content",
-        "user_id"
+        "user_id",
+        "media_url"
     ];
 }

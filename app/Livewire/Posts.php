@@ -12,7 +12,7 @@ class Posts extends Component
     #[Computed()]
     public function posts()
     {
-        $posts = Post::select(["post_content", "created_at"])
+        $posts = Post::select(["post_content", "media_url", "created_at"])
             ->where('user_id', Auth::user()->id)
             ->orderBy('created_at', 'desc')
             ->paginate(10);
