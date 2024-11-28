@@ -83,10 +83,10 @@
         </div>
 
         <!-- Suggested Groups -->
-        <div class="md:col-span-3 bg-white shadow rounded-lg p-4">
+        {{-- <div class="md:col-span-3 bg-white shadow rounded-lg p-4">
             <h2 class="font-bold mb-4">Suggested Groups</h2>
             <div class="space-y-4 max-h-[400px] overflow-y-auto">
-                @foreach (['Group 1', 'Group 2'] as $group)
+                @foreach ($suggestedGroups as $group)
                     <div class="flex items-center gap-2">
                         <div
                             class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-sm font-bold text-white">
@@ -96,6 +96,6 @@
                     </div>
                 @endforeach
             </div>
-        </div>
+        </div> --}}
     </div>
 </div>
