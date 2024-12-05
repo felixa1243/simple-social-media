@@ -3,6 +3,7 @@
 namespace App\Livewire;
 
 use App\Models\Post;
+use App\Services\PostService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\Features\SupportFileUploads\WithFileUploads;
@@ -14,7 +15,11 @@ class CreatePost extends Component
     public $content = '';
     public $image;
     public $maxLength = 280;
-
+    private PostService $postService;
+    public function boot()
+    {
+        $this->postService = new PostService();
+    }
     protected $rules = [
         'content' => 'required|max:280',
         'image' => 'nullable|image|max:1024',
@@ -29,16 +34,15 @@ class CreatePost extends Component
     {
         $this->validate();
 
-        $result = Post::create([
-            'user_id' => Auth::user()->id,
-            'post_content' => $this->content
-        ]);
         $username = Auth::user()->email;
-        $path = $this->image->store(path: "$username/post/$result->id/");
+        $path = null;
+        $filename = null;
         if ($this->image) {
-            $result->update(["media_url" => $path]);
+            $filename =  base64_encode($this->image->getClientOriginalName());
+            $path = $this->image->store(path: "$username/posts/$filename/");
         }
-        session()->flash('message', 'Post created successfully!');
+        $this->postService->createPost($this->content, $path);
+        session()->flash('message', 'Post created successfully!');   
         $this->redirect("/dashboard");
     }
 }

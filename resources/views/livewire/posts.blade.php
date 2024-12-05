@@ -5,7 +5,9 @@
             <div class="mb-4 flex items-center">
                 {{-- <img src="{{ $post['avatar'] }}" alt="{{ $post['user'] }}" class="mr-4 h-10 w-10 rounded-full"> --}}
                 <div>
-                    <h3 class="font-semibold">{{ $post['user'] }}</h3>
+                    <h3 class="font-semibold">
+                        {{ $post->user->name }}
+                    </h3>
                     <p class="text-sm text-gray-500">{{ \App\Utils\TimeHelper::timeAgo($post->created_at) }}</p>
                 </div>
             </div>
@@ -15,7 +17,7 @@
                     class="mb-4 rounded-lg">
             @endif
             <div class="flex space-x-4">
-                <button wire:click="likePost({{ $post['id'] }})"
+                <button wire:click="likePost('{{ $post->id }}')"
                     class="flex items-center text-gray-600 hover:text-blue-600">
                     <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
@@ -23,7 +25,7 @@
                             d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
                         </path>
                     </svg>
-                    {{ 100 }}
+                    {{ $post->post_likes_count }}
                 </button>
                 <button class="flex items-center text-gray-600 hover:text-blue-600">
                     <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"

@@ -90,4 +90,26 @@ class User extends Authenticatable
     {
         return $this->friends()->wherePivot('status', 'accepted');
     }
+    /**
+     * Get Posts
+     */
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+    /**
+     * Get Liked posts
+     */
+    public function likedPosts()
+    {
+        return $this->belongsToMany(Post::class, 'post_likes');
+    }
+    public function likePost(Post $post)
+    {
+        return $this->likedPosts()->attach($post);
+    }
+    public function unlikePost(Post $post)
+    {
+        return $this->likedPosts()->detach($post);
+    }
 }
