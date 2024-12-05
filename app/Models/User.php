@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -44,5 +45,49 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+    /**
+     * Get the friends of the user.
+     */
+    public function friends(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'friendlists',
+            'user_id',
+            'friend_id'
+        )
+            ->withPivot('status')
+            ->withTimestamps();
+    }
+    /**
+     * Get pending friend requests sent by the user.
+     */
+    public function sentFriendRequests(): BelongsToMany
+    {
+        return $this->friends()->wherePivot('status', 'pending');
+    }
+
+    /**
+     * Get friend requests received by the user.
+     */
+    public function receivedFriendRequests(): BelongsToMany
+    {
+        return $this->belongsToMany(
+            User::class,
+            'friendlists',
+            'friend_id',
+            'user_id'
+        )->withPivot('status')
+            ->withTimestamps()
+            ->wherePivot('status', 'pending');
+    }
+
+    /**
+     * Get accepted friendships.
+     */
+    public function acceptedFriends(): BelongsToMany
+    {
+        return $this->friends()->wherePivot('status', 'accepted');
     }
 }

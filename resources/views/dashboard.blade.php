@@ -7,6 +7,7 @@
 
     <div class="py-12">
         @livewire('create-post')
+        @livewire('friend-suggestion')
         @livewire('posts')
     </div>
 </x-app-layout>
