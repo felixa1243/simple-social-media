@@ -13,7 +13,6 @@ class FriendService
     {
         $user = User::query()->where('email', '=', $email)->first();
         Auth::user()->friends()->attach($user->id, ['status' => FriendStatus::PENDING->value]);
-        session()->flash('success', 'Friend Request sent!');
     }
     public function friendSuggestion()
     {
@@ -36,11 +35,11 @@ class FriendService
     public function getFriendRequests()
     {
         $friends = Auth::user()
-            ->friends()  // Get the `friends` relationship
-            ->join('users as u1', 'friendlists.friend_id', '=', 'u1.id')  // First join alias
-            ->join('users as u2', 'friendlists.user_id', '=', 'u2.id')   // Second join alias
+            ->friends()
+            ->join('users as u1', 'friendlists.friend_id', '=', 'u1.id')
+            ->join('users as u2', 'friendlists.user_id', '=', 'u2.id')
             ->select('u1.name as friend_name', 'u1.email as friend_email', 'friendlists.status', 'u2.name as user_name', 'u2.email as user_email')
-            ->where('friendlists.user_id', Auth::id())  // Filter by the current user's ID
+            ->where('friendlists.user_id', Auth::id())
             ->get();
         return $friends;
     }
