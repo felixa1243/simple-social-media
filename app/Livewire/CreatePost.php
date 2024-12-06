@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Livewire;
-
-use App\Models\Post;
 use App\Services\PostService;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;

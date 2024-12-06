@@ -2,31 +2,40 @@
 
 namespace App\Livewire;
 
-use App\Models\Post;
 use App\Services\PostService;
-use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 
 class Posts extends Component
 {
     private PostService $postService;
+
     public function boot()
     {
         $this->postService = new PostService();
     }
+
     #[Computed()]
     public function posts()
     {
-        $posts = $this->postService->myPosts()->orderBy('created_at', 'desc')->paginate(10);
-        return $posts;
+        return $this->postService->myPosts()
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
     }
+
     public function render()
     {
         return view('livewire.posts');
     }
-    public function likePost($post_id)
+
+    public function toggleLike($postId)
     {
-        $this->postService->likePost($post_id);
+        $post = $this->postService->getPost($postId);
+
+        if ($post->post_likes->isNotEmpty()) {
+            $this->postService->unlikePost($postId);
+        } else {
+            $this->postService->likePost($postId);
+        }
     }
 }

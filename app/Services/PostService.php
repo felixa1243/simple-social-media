@@ -25,13 +25,22 @@ class PostService
     }
     public function unlikePost($post_id)
     {
-        $post = Post::findOrFail($post_id)->first();
+        $post = $this->getPost($post_id);
+        Auth::user()->unlikePost($post);
     }
     public function myPosts()
     {
-        return Auth::user()->posts()->withCount('post_likes')->with('user');
+        $userId = Auth::id();
+
+        return Auth::user()
+            ->posts()
+            ->withCount('post_likes')
+            ->with(['user', 'post_likes' => function ($query) use ($userId) {
+                $query->where('user_id', $userId);
+            }]);
     }
-    private function getPost($post_id)
+
+    public function getPost($post_id)
     {
         return Post::findOrFail($post_id);
     }

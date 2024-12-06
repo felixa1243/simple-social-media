@@ -3,7 +3,6 @@
     @foreach ($this->posts as $post)
         <div class="rounded-lg bg-white p-6 shadow-md w-1/2">
             <div class="mb-4 flex items-center">
-                {{-- <img src="{{ $post['avatar'] }}" alt="{{ $post['user'] }}" class="mr-4 h-10 w-10 rounded-full"> --}}
                 <div>
                     <h3 class="font-semibold">
                         {{ $post->user->name }}
@@ -16,17 +15,19 @@
                 <img src="{{ route('private-file', ['filename' => $post->media_url]) }}" alt="Post image"
                     class="mb-4 rounded-lg">
             @endif
+            @php $isLiked = $post->post_likes->isNotEmpty(); @endphp
             <div class="flex space-x-4">
-                <button wire:click="likePost('{{ $post->id }}')"
-                    class="flex items-center text-gray-600 hover:text-blue-600">
-                    <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg">
+                <button wire:click="toggleLike('{{ $post->id }}')"
+                    class="flex items-center {{ $isLiked ? 'text-blue-600' : 'text-gray-600 hover:text-blue-600' }}">
+                    <svg class="mr-2 h-5 w-5" fill="{{ $isLiked ? 'currentColor' : 'none' }}" stroke="currentColor"
+                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
                         </path>
                     </svg>
                     {{ $post->post_likes_count }}
                 </button>
+
                 <button class="flex items-center text-gray-600 hover:text-blue-600">
                     <svg class="mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                         xmlns="http://www.w3.org/2000/svg">
