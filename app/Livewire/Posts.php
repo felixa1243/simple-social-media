@@ -2,25 +2,35 @@
 
 namespace App\Livewire;
 
+use App\Models\Post;
 use App\Services\PostService;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Livewire\Attributes\Url;
 
 class Posts extends Component
 {
     private PostService $postService;
-
+    private $posts;
+    #[Url]
+    public $perPage = '10';
     public function boot()
     {
         $this->postService = new PostService();
     }
 
-    #[Computed()]
-    public function posts()
+    public function mount($posts = null)
     {
-        return $this->postService->myPosts()
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
+        if ($posts) {
+            $this->posts = $posts;
+        }
+    }
+
+    #[Computed]
+    public function postsPaginated()
+    {
+        return $this->posts->paginate($this->perPage);
     }
 
     public function render()

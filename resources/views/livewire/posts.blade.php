@@ -1,6 +1,6 @@
 <div class="flex items-center justify-center gap-5 flex-col w-full">
     <h2 class="text-xl dark:text-white">My Recent Posts</h2>
-    @foreach ($this->posts as $post)
+    @foreach ($this->postsPaginated as $post)
         <div class="rounded-lg bg-white p-6 shadow-md w-1/2">
             <div class="mb-4 flex items-center">
                 <div>
@@ -40,6 +40,5 @@
             </div>
         </div>
     @endforeach
-
-    {{ $this->posts->links() }}
+    {{$this->postsPaginated->links()}}
 </div>

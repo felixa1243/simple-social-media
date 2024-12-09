@@ -8,6 +8,6 @@
     <div class="py-12">
         @livewire('create-post')
         @livewire('friend-suggestion')
-        @livewire('posts')
+        @livewire('posts', ['posts' => $posts])
     </div>
 </x-app-layout>
