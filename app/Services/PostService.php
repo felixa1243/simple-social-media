@@ -46,6 +46,8 @@ class PostService
 
     public function getPost($post_id)
     {
-        return Post::findOrFail($post_id);
+        return Post::with('user') 
+            ->withCount('post_likes')
+            ->findOrFail($post_id);
     }
 }

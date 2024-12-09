@@ -8,10 +8,6 @@
                 <textarea wire:model.debounce.300ms="content" placeholder="What's on your mind?"
                     class="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                     rows="4"></textarea>
-                <div class="absolute bottom-2 right-2 text-sm" x-data="{ charCount: @entangle('content').defer.length }">
-                    <span x-text="charCount"
-                        :class="{ 'text-red-500': charCount >= {{ $maxLength }} }"></span>/{{ $maxLength }}
-                </div>
             </div>
             @error('content')
                 <span class="text-red-500 text-sm">{{ $message }}</span>
@@ -42,7 +38,8 @@
             <button type="submit"
                 class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md transition duration-200 flex items-center justify-center"
                 :disabled="!@this.content.length && !@this.image">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 rotate-90" viewBox="0 0 20 20" fill="currentColor">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 rotate-90" viewBox="0 0 20 20"
+                    fill="currentColor">
                     <path
                         d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
                 </svg>

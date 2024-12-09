@@ -28,10 +28,22 @@ class FriendService
         $users = User::query()
             ->where('email', '!=', $authUserEmail)
             ->whereNotIn('id', $excludedEmails)
-            ->select('name', 'email')
+            ->select('id','name', 'email')
             ->paginate(10);
         return $users;
     }
+    public function findUser($keyword, $perPage)
+    {
+        $searchColumns = ['email', 'name'];
+        return User::query()
+            ->where(function ($query) use ($keyword, $searchColumns) {
+                foreach ($searchColumns as $column) {
+                    $query->orWhere($column, 'LIKE', "%$keyword%");
+                }
+            })
+            ->paginate($perPage);
+    }
+
     public function getFriendRequests()
     {
         $friends = Auth::user()
@@ -42,5 +54,9 @@ class FriendService
             ->where('friendlists.user_id', Auth::id())
             ->get();
         return $friends;
+    }
+    public function findById($userId)
+    {
+        return User::findOrFail($userId);
     }
 }
