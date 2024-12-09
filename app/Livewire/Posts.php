@@ -1,18 +1,16 @@
 <?php
 
 namespace App\Livewire;
-
-use App\Models\Post;
 use App\Services\PostService;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\Url;
 
 class Posts extends Component
 {
     private PostService $postService;
-    private $posts;
+    public $userId;
+    public $posts;
     #[Url]
     public $perPage = '10';
     public function boot()
@@ -26,26 +24,23 @@ class Posts extends Component
             $this->posts = $posts;
         }
     }
-
     #[Computed]
     public function postsPaginated()
     {
-        return $this->posts->paginate($this->perPage);
+        $posts = $this->postService->getUserPosts($this->userId);
+        return $posts->paginate($this->perPage);
     }
 
     public function render()
     {
         return view('livewire.posts');
     }
-
-    public function toggleLike($postId)
+    public function like($postId)
     {
-        $post = $this->postService->getPost($postId);
-
-        if ($post->post_likes->isNotEmpty()) {
-            $this->postService->unlikePost($postId);
-        } else {
-            $this->postService->likePost($postId);
-        }
+        $this->postService->likePost($postId);
+    }
+    public function unlike($postId)
+    {
+        $this->postService->unlikePost($postId);
     }
 }

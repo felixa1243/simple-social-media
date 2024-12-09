@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class PostService
@@ -31,8 +32,11 @@ class PostService
     public function myPosts()
     {
         $userId = Auth::id();
-
-        return Auth::user()
+        return $this->getUserPosts($userId);
+    }
+    public function getUserPosts($userId)
+    {
+        return User::findOrFail($userId)
             ->posts()
             ->withCount('post_likes')
             ->with(['user', 'post_likes' => function ($query) use ($userId) {
