@@ -13,4 +13,16 @@ class Post extends Model
         "user_id",
         "media_url"
     ];
+    public function post_likes()
+    {
+        return $this->belongsToMany(User::class, 'post_likes');
+    }
+    public function likeCount()
+    {
+        return $this->likes()->count();
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

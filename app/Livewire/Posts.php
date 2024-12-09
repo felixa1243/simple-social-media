@@ -1,26 +1,46 @@
 <?php
 
 namespace App\Livewire;
-
-use App\Models\Post;
-use Illuminate\Support\Facades\Auth;
+use App\Services\PostService;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
+use Livewire\Attributes\Url;
 
 class Posts extends Component
 {
-    #[Computed()]
-    public function posts()
+    private PostService $postService;
+    public $userId;
+    public $posts;
+    #[Url]
+    public $perPage = '10';
+    public function boot()
     {
-        $posts = Post::select(["post_content", "media_url", "created_at"])
-            ->where('user_id', Auth::user()->id)
-            ->orderBy('created_at', 'desc')
-            ->paginate(10);
-
-        return $posts;
+        $this->postService = new PostService();
     }
+
+    public function mount($posts = null)
+    {
+        if ($posts) {
+            $this->posts = $posts;
+        }
+    }
+    #[Computed]
+    public function postsPaginated()
+    {
+        $posts = $this->postService->getUserPosts($this->userId);
+        return $posts->paginate($this->perPage);
+    }
+
     public function render()
     {
         return view('livewire.posts');
+    }
+    public function like($postId)
+    {
+        $this->postService->likePost($postId);
+    }
+    public function unlike($postId)
+    {
+        $this->postService->unlikePost($postId);
     }
 }
